@@ -3,6 +3,8 @@ import database from '../configs/db';
 import axiosInstance from '../configs/axios';
 import axios from 'axios';
 import puppeteer from 'puppeteer';
+import { getCovidData } from '../utils/crawl.util';
+import { parseArray } from '../utils/parse.util';
 
 export const getAllDatas = async (
     req: Request,
@@ -75,30 +77,27 @@ export const crawlPupetteer = async (
     //         throw error;
     //     }
     // });
-    const arr = Array.from(Array(50).keys());
-    const crawlUrl =
-        'https://ncov.moh.gov.vn/web/guest/dong-thoi-gian?p_p_id=com_liferay_asset_publisher_web_portlet_AssetPublisherPortlet_INSTANCE_nf7Qy5mlPXqs&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_com_liferay_asset_publisher_web_portlet_AssetPublisherPortlet_INSTANCE_nf7Qy5mlPXqs_delta=10&p_r_p_resetCur=false&_com_liferay_asset_publisher_web_portlet_AssetPublisherPortlet_INSTANCE_nf7Qy5mlPXqs_cur=';
-    let urls = arr.map((e) => {
-        return crawlUrl + e;
-    });
-
-    const browser = await puppeteer.launch({ headless: false });
-    const page = await browser.newPage();
-    await page.goto(crawlUrl + 0);
-
-    // Get the "viewport" of the page, as reported by the page.
-    const dimensions = await page.evaluate(() => {
-        let times = document.querySelectorAll('.timeline-head');
-        let timelines = [];
-        times.forEach((time) => {
-            return time.children[0].innerHTML;
+    try {
+        const arr = Array.from(Array(50).keys());
+        const crawlUrl =
+            'https://ncov.moh.gov.vn/web/guest/dong-thoi-gian?p_p_id=com_liferay_asset_publisher_web_portlet_AssetPublisherPortlet_INSTANCE_nf7Qy5mlPXqs&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_com_liferay_asset_publisher_web_portlet_AssetPublisherPortlet_INSTANCE_nf7Qy5mlPXqs_delta=10&p_r_p_resetCur=false&_com_liferay_asset_publisher_web_portlet_AssetPublisherPortlet_INSTANCE_nf7Qy5mlPXqs_cur=';
+        let urls = arr.map((e) => {
+            return crawlUrl + e;
         });
-    });
 
-    console.log('Dimensions:', dimensions);
+        const browser = await puppeteer.launch({ headless: true });
+        const page = await browser.newPage();
+        const url = crawlUrl + 0;
+        await page.goto(crawlUrl + 0);
+        const dimensions = await getCovidData(url, page, 1);
 
-    return res.json({
-        crawled: true,
-        status: 'success',
-    });
+        browser.close();
+        return res.json({
+            crawled: true,
+            status: 'success',
+            covids: parseArray(dimensions),
+        });
+    } catch (error) {
+        next(error);
+    }
 };
