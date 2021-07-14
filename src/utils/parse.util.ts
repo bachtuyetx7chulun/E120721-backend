@@ -3,28 +3,41 @@ const parseTime = (time: any) => {
         text: time,
         date:
             time.split(' ')[1].split('/')[2] +
-            time.split(' ')[1].split('/')[0] +
-            time.split(' ')[1].split('/')[1],
+            time.split(' ')[1].split('/')[1] +
+            time.split(' ')[1].split('/')[0],
         timeInSeconds:
             parseInt(time.split(' ')[0].split(':')[0]) * 3600 +
             parseInt(time.split(' ')[0].split(':')[1]) * 60,
     };
 };
 
+export const parseCurrentTime = () => {
+    const currentTime = new Date();
+    const currentDateToString = currentTime.toLocaleString().split(',')[0];
+    const result =
+        currentDateToString.split('/')[2] +
+        ('0' + currentDateToString.split('/')[0]).slice(-2) +
+        currentDateToString.split('/')[1];
+    return result;
+};
+
 const parseData = (content: string) => {
-    const total: any = content.match(/\d+/); // prettier-ignore
+    const total: any = content.match(/\d+\.\d+|\d+/); // prettier-ignore
+    const count =
+        parseInt(total[0]) == parseFloat(total[0])
+            ? parseInt(total[0])
+            : parseFloat(total[0]) * 1000;
+
     return {
-        total: total[0],
+        total: count,
         content,
     };
 };
 
-export const parseArray = (datas: any) => {
-    return datas.map((data: any) => {
-        return {
-            ...data,
-            datas: parseData(data.datas),
-            time: parseTime(data.time),
-        };
-    });
+export const parseArray = (data: any) => {
+    return {
+        ...data,
+        time: parseTime(data.time),
+        data: parseData(data.data),
+    };
 };

@@ -1,0 +1,16 @@
+version: "3.7" 
+services:
+  redis:
+    image: redis
+    container_name: E120721-redis
+    ports: 
+        - "6379:6379"
+    expose: 
+        - "6379"
+    volumes:
+      - type: volume
+        source: redis-data
+        target: /data
+    restart: always
+volumes:
+  redis-data: {}
