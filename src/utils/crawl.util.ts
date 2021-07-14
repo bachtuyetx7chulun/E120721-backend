@@ -1,12 +1,14 @@
-import { Browser, Page } from 'puppeteer';
+import puppeteer, { Page } from 'puppeteer';
 
-const getAsyncCovidData = async (url: string, page: Page, id: any) => {
+const getAsyncCovidData = async (url: string) => {
+    const browser = await puppeteer.launch({ headless: true });
+    const page = await browser.newPage();
     await page.goto(url, {
         timeout: 3000000,
     });
     await page.waitForTimeout(2000);
     let result = await page.evaluate(() => {
-        let node = document.querySelector('.timeline-detail');
+        const node: any = document.querySelector('.timeline-detail');
         const time = node.querySelector('.timeline-head > h3')?.innerHTML;
         const content = node.querySelector('.timeline-content')?.innerHTML;
         return { time, data: content };
@@ -15,7 +17,9 @@ const getAsyncCovidData = async (url: string, page: Page, id: any) => {
     return result;
 };
 
-const getAsyncCovidDetail = async (url: string, page: Page, id: any) => {
+const getAsyncCovidDetail = async (url: string) => {
+    const browser = await puppeteer.launch({ headless: true });
+    const page = await browser.newPage();
     await page.goto(url, {
         timeout: 3000000,
     });
@@ -23,7 +27,7 @@ const getAsyncCovidDetail = async (url: string, page: Page, id: any) => {
     let result = await page.evaluate(() => {
         let nodes = document.querySelectorAll('span.font24');
         let datas: any = [];
-        nodes.forEach((node) => {
+        nodes.forEach((node: any) => {
             datas.push(node.innerHTML);
         });
         return datas;
@@ -32,33 +36,4 @@ const getAsyncCovidDetail = async (url: string, page: Page, id: any) => {
     return result;
 };
 
-const getPromiseCovidData = (
-    url: string,
-    browser: Browser,
-    id: any
-): Promise<any> => {
-    return new Promise(async (resolve, reject) => {
-        let page = await browser.newPage();
-        await page.goto(url, { timeout: 3000000 });
-        await page.waitForTimeout(2000);
-        let results = await page.evaluate(() => {
-            let nodes = document.querySelectorAll('.timeline-detail');
-            const datas: any = [];
-            nodes.forEach((node) => {
-                const time = node.querySelector(
-                    '.timeline-head > h3'
-                )?.innerHTML;
-                const content =
-                    node.querySelector('.timeline-content')?.innerHTML;
-                datas.push({ time, datas: content });
-            });
-
-            return datas;
-        });
-
-        resolve(results);
-        await page.close();
-    });
-};
-
-export { getAsyncCovidData, getPromiseCovidData, getAsyncCovidDetail };
+export { getAsyncCovidData, getAsyncCovidDetail };

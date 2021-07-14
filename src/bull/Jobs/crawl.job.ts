@@ -7,10 +7,10 @@ export const crawlPerDay = async () => {
     try {
         // TODO: Setup time start for service
         // TODO: find covid record in the database with the same day
-        const url = 'https://ncov.moh.gov.vn/web/guest/dong-thoi-gian';
-        const browser = await puppeteer.launch({ headless: true });
-        const page = await browser.newPage();
-        const dimension = await getAsyncCovidData(url, page, 1);
+
+        const dimension = await getAsyncCovidData(
+            'https://ncov.moh.gov.vn/web/guest/dong-thoi-gian'
+        );
         const currentCovidData = parseArray(dimension);
         const latestRecordCovid = await (
             await database
@@ -62,9 +62,7 @@ export const crawlDetail = async () => {
     try {
         // TODO: find covid record in the database with the same day
         const url = 'https://ncov.moh.gov.vn/web/guest/trang-chu';
-        const browser = await puppeteer.launch({ headless: true });
-        const page = await browser.newPage();
-        const dimension = await getAsyncCovidDetail(url, page, 1);
+        const dimension = await getAsyncCovidDetail(url);
 
         // TODO: Overide all records in the firebase database realtime
         await database

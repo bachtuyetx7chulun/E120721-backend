@@ -1,7 +1,7 @@
 import nodeSchedule from 'node-schedule';
-import axios from 'axios';
+import { crawlQueue } from '../bull/bull.init';
 
 // TODO: Crawl website per 30 minutes and save to realtime-db
-const jobs = nodeSchedule.scheduleJob('*/30 * * * *', () => {
-    console.log(1);
+const jobs = nodeSchedule.scheduleJob('00 30 * * *', () => {
+    crawlQueue.add({ name: 'crawlPerDay' });
 });
