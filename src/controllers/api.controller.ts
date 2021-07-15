@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { crawlQueue } from '../bull/bull.init';
 import database from '../configs/db';
+import { crawlDetail, crawlPerDay } from '../bull/Jobs/crawl.job';
 
 export const getAllDatas = async (
     req: Request,
@@ -18,13 +19,13 @@ export const getAllDatas = async (
     return res.json(jsonData);
 };
 
-export const crawlPerDay = async (
+export const crawlPerDays = async (
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
     try {
-        crawlQueue.add({ jobName: 'crawlPerDay' });
+        await crawlPerDay();
         return res.json({
             time: new Date(),
             status: 'called',
@@ -40,8 +41,7 @@ export const crawlDetails = async (
     next: NextFunction
 ) => {
     try {
-        crawlQueue.add({ jobName: 'crawlDetail' });
-
+        await crawlDetail();
         return res.json({
             time: new Date(),
             status: 'called',

@@ -10,7 +10,6 @@
     "scripts": {
         "dev": "npm-run-all -p dev:*",
         "dev:app": "ts-node-dev --respawn --transpile-only src/index.ts",
-        "dev:queue": "ts-node-dev --respawn --transpile-only src/bull/index.ts",
         "dev:cron": "ts-node-dev  src/services/crawl.service.ts",
         "build": "yarn tsc",
         "crawl": "node app/services/crawl.service.js"
