@@ -23,15 +23,18 @@ export const crawlPerDay = async () => {
 
         // ? If the latest record is not exist => create a new record with the same day
         if (!latestRecordCovid) {
-            await database
-                .ref('covids/days/' + currentCovidData.time.date)
-                .set({
-                    details: [{ ...currentCovidData }],
-                    total: parseInt(currentCovidData.data.total),
-                    latestUpdate: currentCovidData.time.text,
-                });
+            if (currentCovidData.time.date == parseCurrentTime()) {
+                await database
+                    .ref('covids/days/' + currentCovidData.time.date)
+                    .set({
+                        details: [{ ...currentCovidData }],
+                        total: parseInt(currentCovidData.data.total),
+                        latestUpdate: currentCovidData.time.text,
+                    });
+            }
         } else {
             // ? Update count
+
             if (currentCovidData.time.text !== latestRecordCovid.latestUpdate) {
                 let updateData = {
                     total:
