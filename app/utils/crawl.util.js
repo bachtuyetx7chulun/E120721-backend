@@ -44,7 +44,10 @@ var getAsyncCovidData = function (url) { return __awaiter(void 0, void 0, void 0
     var browser, page, result;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, puppeteer_1.default.launch({ headless: true })];
+            case 0: return [4 /*yield*/, puppeteer_1.default.launch({
+                    headless: true,
+                    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+                })];
             case 1:
                 browser = _a.sent();
                 return [4 /*yield*/, browser.newPage()];
@@ -76,7 +79,10 @@ var getAsyncCovidDetail = function (url) { return __awaiter(void 0, void 0, void
     var browser, page, result;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, puppeteer_1.default.launch({ headless: true })];
+            case 0: return [4 /*yield*/, puppeteer_1.default.launch({
+                    headless: true,
+                    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+                })];
             case 1:
                 browser = _a.sent();
                 return [4 /*yield*/, browser.newPage()];

@@ -1,7 +1,10 @@
 import puppeteer, { Page } from 'puppeteer';
 
 const getAsyncCovidData = async (url: string) => {
-    const browser = await puppeteer.launch({ headless: true });
+    const browser = await puppeteer.launch({
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
     const page = await browser.newPage();
     await page.goto(url, {
         timeout: 3000000,
@@ -18,7 +21,10 @@ const getAsyncCovidData = async (url: string) => {
 };
 
 const getAsyncCovidDetail = async (url: string) => {
-    const browser = await puppeteer.launch({ headless: true });
+    const browser = await puppeteer.launch({
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
     const page = await browser.newPage();
     await page.goto(url, {
         timeout: 3000000,
