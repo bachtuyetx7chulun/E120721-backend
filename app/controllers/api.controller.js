@@ -39,51 +39,59 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var bull_init_1 = require("../bull/bull.init");
 var db_1 = __importDefault(require("../configs/db"));
+var crawl_job_1 = require("../bull/Jobs/crawl.job");
 exports.getAllDatas = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var limit, data, dataLength, jsonData;
+    var data;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0:
-                limit = req.query.limit || 30;
-                return [4 /*yield*/, db_1.default.ref('covid').once('value')];
+            case 0: return [4 /*yield*/, db_1.default.ref('covids/days').once('value')];
             case 1: return [4 /*yield*/, (_a.sent()).val()];
             case 2:
                 data = _a.sent();
-                dataLength = data.length;
-                jsonData = data.slice(dataLength - parseInt(limit.toString()), dataLength);
-                return [2 /*return*/, res.json(jsonData)];
+                return [2 /*return*/, res.json(data)];
         }
     });
 }); };
-exports.crawlPerDay = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+exports.crawlPerDays = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var error_1;
     return __generator(this, function (_a) {
-        try {
-            bull_init_1.crawlQueue.add({ jobName: 'crawlPerDay' });
-            return [2 /*return*/, res.json({
-                    time: new Date(),
-                    status: 'called',
-                })];
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, crawl_job_1.crawlPerDay()];
+            case 1:
+                _a.sent();
+                return [2 /*return*/, res.json({
+                        time: new Date(),
+                        status: 'called',
+                    })];
+            case 2:
+                error_1 = _a.sent();
+                next(error_1);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
-        catch (error) {
-            next(error);
-        }
-        return [2 /*return*/];
     });
 }); };
 exports.crawlDetails = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var error_2;
     return __generator(this, function (_a) {
-        try {
-            bull_init_1.crawlQueue.add({ jobName: 'crawlDetail' });
-            return [2 /*return*/, res.json({
-                    time: new Date(),
-                    status: 'called',
-                })];
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, crawl_job_1.crawlDetail()];
+            case 1:
+                _a.sent();
+                return [2 /*return*/, res.json({
+                        time: new Date(),
+                        status: 'called',
+                    })];
+            case 2:
+                error_2 = _a.sent();
+                next(error_2);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
-        catch (error) {
-            next(error);
-        }
-        return [2 /*return*/];
     });
 }); };

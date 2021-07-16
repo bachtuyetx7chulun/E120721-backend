@@ -1,30 +1,23 @@
 import { NextFunction, Request, Response } from 'express';
-import { crawlQueue } from '../bull/bull.init';
 import database from '../configs/db';
+import { crawlDetail, crawlPerDay } from '../bull/Jobs/crawl.job';
 
 export const getAllDatas = async (
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
-    const limit = req.query.limit || 30;
-    const data = await (await database.ref('covid').once('value')).val();
-    const dataLength = data.length;
-    const jsonData = data.slice(
-        dataLength - parseInt(limit.toString()),
-        dataLength
-    );
-
-    return res.json(jsonData);
+    const data = await (await database.ref('covids/days').once('value')).val();
+    return res.json(data);
 };
 
-export const crawlPerDay = async (
+export const crawlPerDays = async (
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
     try {
-        crawlQueue.add({ jobName: 'crawlPerDay' });
+        await crawlPerDay();
         return res.json({
             time: new Date(),
             status: 'called',
@@ -40,8 +33,7 @@ export const crawlDetails = async (
     next: NextFunction
 ) => {
     try {
-        crawlQueue.add({ jobName: 'crawlDetail' });
-
+        await crawlDetail();
         return res.json({
             time: new Date(),
             status: 'called',
