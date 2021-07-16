@@ -1,12 +1,24 @@
-module.exports = {
-    apps: [
-        {
-            name: 'Covid-app',
-            script: './app/index.js',
+apps: [
+    {
+        name: 'app',
+        script: './app/index.js',
+        instances: 'max',
+        env: {
+            NODE_ENV: 'development',
         },
-        {
-            name: 'Covid-cron',
-            script: './app/services/crawl.service.js',
+        env_production: {
+            NODE_ENV: 'production',
         },
-    ],
-};
+    },
+    {
+        name: 'cron',
+        script: './app/services/crawl.service.js',
+        instances: 'max',
+        env: {
+            NODE_ENV: 'development',
+        },
+        env_production: {
+            NODE_ENV: 'production',
+        },
+    },
+];
