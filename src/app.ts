@@ -3,6 +3,8 @@ import morgan from 'morgan';
 import { PORT } from './configs';
 import apiRouter from './routers';
 import { GetError, HandleError } from './middleware/error.middleware';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 export default class App {
     private app: Application;
