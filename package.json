@@ -7,7 +7,7 @@
     "license": "MIT",
     "private": true,
     "scripts": {
-        "start": "pm2 start ecosystem.config.js",
+        "start": "node app/index.js",
         "log": "pm2 logs",
         "destroy": "pm2 kill",
         "dev": "npm-run-all -p dev:*",
