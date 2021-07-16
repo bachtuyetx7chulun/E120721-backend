@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import { crawlQueue } from '../bull/bull.init';
-import database from '../configs/db';
 import { crawlDetail, crawlPerDay } from '../bull/Jobs/crawl.job';
+import database from '../configs/db';
 
 export const getAllDatas = async (
     req: Request,

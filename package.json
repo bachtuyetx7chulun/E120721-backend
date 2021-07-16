@@ -6,8 +6,8 @@
     "author": "Trung Hieu",
     "license": "MIT",
     "private": true,
-    "type": "module",
     "scripts": {
+        "start": "pm2 start ecosystem.config.js",
         "dev": "npm-run-all -p dev:*",
         "dev:app": "ts-node-dev --respawn --transpile-only src/index.ts",
         "dev:cron": "ts-node-dev  src/services/crawl.service.ts",
@@ -52,6 +52,7 @@
         "helmet": "^4.6.0",
         "morgan": "^1.10.0",
         "node-schedule": "^2.0.0",
+        "pm2": "^5.1.0",
         "puppeteer": "^10.1.0"
     }
 }

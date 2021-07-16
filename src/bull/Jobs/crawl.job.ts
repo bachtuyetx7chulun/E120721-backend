@@ -1,7 +1,6 @@
-import puppeteer from 'puppeteer';
+import database from '../../configs/db';
 import { getAsyncCovidData, getAsyncCovidDetail } from '../../utils/crawl.util';
 import { parseArray, parseCurrentTime } from '../../utils/parse.util';
-import database from '../../configs/db';
 
 export const crawlPerDay = async () => {
     try {
@@ -53,10 +52,8 @@ export const crawlPerDay = async () => {
             }
         }
 
-        console.log(`Database is updated`);
         return true;
     } catch (error) {
-        console.log(`Something went wrong 😂`);
         return false;
     }
 };
