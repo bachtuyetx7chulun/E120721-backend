@@ -32,7 +32,6 @@ export default class App {
     public listen(): void {
         this.app.listen(this.app.get('port'), () => {
             console.log(`Server is running`);
-            console.log(`http://localhost:${this.app.get('port')}/api/v1`);
         });
     }
 }
