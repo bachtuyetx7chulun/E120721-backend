@@ -1,6 +1,5 @@
 import { CronJob } from 'cron';
 import axios from 'axios';
-import { HOST_NAME } from '../configs/index';
 
 // TODO: Crawl website per 30 minutes and save to realtime-db
 const dataCrawlJob = new CronJob('00 */15 * * * *', async () => {
