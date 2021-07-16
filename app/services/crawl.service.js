@@ -41,12 +41,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var cron_1 = require("cron");
 var axios_1 = __importDefault(require("axios"));
-var index_1 = require("../configs/index");
 // TODO: Crawl website per 30 minutes and save to realtime-db
 var dataCrawlJob = new cron_1.CronJob('00 */15 * * * *', function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, axios_1.default.get(index_1.HOST_NAME + "/api/v1/crawl")];
+            case 0: return [4 /*yield*/, axios_1.default.get("https://e120721.herokuapp.com/api/v1/crawl")];
             case 1:
                 _a.sent();
                 return [2 /*return*/];
@@ -56,7 +55,7 @@ var dataCrawlJob = new cron_1.CronJob('00 */15 * * * *', function () { return __
 var overviewCrawlJob = new cron_1.CronJob('00 */30 * * * *', function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, axios_1.default.get(index_1.HOST_NAME + "/api/v1/overview")];
+            case 0: return [4 /*yield*/, axios_1.default.get("https://e120721.herokuapp.com/api/v1/overview")];
             case 1:
                 _a.sent();
                 return [2 /*return*/];
