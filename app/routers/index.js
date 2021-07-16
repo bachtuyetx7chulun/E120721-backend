@@ -6,4 +6,7 @@ var router = express_1.Router();
 router.get('/covid', api_controller_1.getAllDatas);
 router.get('/crawl', api_controller_1.crawlPerDays);
 router.get('/overview', api_controller_1.crawlDetails);
+router.get('/', function (req, res, next) {
+    res.send('hello');
+});
 exports.default = router;
