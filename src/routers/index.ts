@@ -8,6 +8,6 @@ const router = Router();
 
 router.get('/covid', getAllDatas);
 router.get('/crawl', crawlPerDay);
-router.get('/detail', crawlDetails);
+router.get('/overview', crawlDetails);
 
 export default router;

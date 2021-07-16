@@ -1,7 +1,6 @@
-import puppeteer from 'puppeteer';
+import database from '../../configs/db';
 import { getAsyncCovidData, getAsyncCovidDetail } from '../../utils/crawl.util';
 import { parseArray, parseCurrentTime } from '../../utils/parse.util';
-import database from '../../configs/db';
 
 export const crawlPerDay = async () => {
     try {
@@ -23,13 +22,15 @@ export const crawlPerDay = async () => {
 
         // ? If the latest record is not exist => create a new record with the same day
         if (!latestRecordCovid) {
-            await database
-                .ref('covids/days/' + currentCovidData.time.date)
-                .set({
-                    details: [{ ...currentCovidData }],
-                    total: parseInt(currentCovidData.data.total),
-                    latestUpdate: currentCovidData.time.text,
-                });
+            if (parseCurrentTime() == currentCovidData.time.date) {
+                await database
+                    .ref('covids/days/' + currentCovidData.time.date)
+                    .set({
+                        details: [{ ...currentCovidData }],
+                        total: parseInt(currentCovidData.data.total),
+                        latestUpdate: currentCovidData.time.text,
+                    });
+            }
         } else {
             // ? Update count
             if (currentCovidData.time.text !== latestRecordCovid.latestUpdate) {
@@ -50,10 +51,8 @@ export const crawlPerDay = async () => {
             }
         }
 
-        console.log(`Database is updated`);
         return true;
     } catch (error) {
-        console.log(`Something went wrong 😂`);
         return false;
     }
 };
@@ -66,13 +65,11 @@ export const crawlDetail = async () => {
 
         // TODO: Overide all records in the firebase database realtime
         await database
-            .ref('covids/overview/' + parseCurrentTime())
+            .ref('covids/overviews/' + parseCurrentTime())
             .set(dimension);
 
-        console.log(`Database is updated`);
         return true;
     } catch (error) {
-        console.log(`Something went wrong 😂`);
         return false;
     }
 };
