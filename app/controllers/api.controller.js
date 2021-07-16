@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -35,12 +46,20 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var db_1 = __importDefault(require("../configs/db"));
-var crawl_job_1 = require("../bull/Jobs/crawl.job");
+var parse_util_1 = require("../utils/parse.util");
+var crawl_util_1 = require("../utils/crawl.util");
 exports.getAllDatas = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var data;
     return __generator(this, function (_a) {
@@ -54,44 +73,89 @@ exports.getAllDatas = function (req, res, next) { return __awaiter(void 0, void 
     });
 }); };
 exports.crawlPerDays = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var error_1;
+    var dimension, currentCovidData, latestRecordCovid, updateData, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, crawl_job_1.crawlPerDay()];
+                _a.trys.push([0, 8, , 9]);
+                return [4 /*yield*/, crawl_util_1.getAsyncCovidData('https://ncov.moh.gov.vn/web/guest/dong-thoi-gian')];
             case 1:
-                _a.sent();
-                return [2 /*return*/, res.json({
-                        time: new Date(),
-                        status: 'called',
+                dimension = _a.sent();
+                currentCovidData = parse_util_1.parseArray(dimension);
+                return [4 /*yield*/, db_1.default
+                        .ref('covids/days/' + parse_util_1.parseCurrentTime())
+                        .once('value')];
+            case 2: return [4 /*yield*/, (_a.sent()).val()];
+            case 3:
+                latestRecordCovid = _a.sent();
+                if (!!latestRecordCovid) return [3 /*break*/, 6];
+                if (!(parse_util_1.parseCurrentTime() == currentCovidData.time.date)) return [3 /*break*/, 5];
+                return [4 /*yield*/, db_1.default
+                        .ref('covids/days/' + currentCovidData.time.date)
+                        .set({
+                        details: [__assign({}, currentCovidData)],
+                        total: parseInt(currentCovidData.data.total),
+                        latestUpdate: currentCovidData.time.text,
                     })];
-            case 2:
+            case 4:
+                _a.sent();
+                _a.label = 5;
+            case 5: return [3 /*break*/, 7];
+            case 6:
+                // ? Update count
+                if (currentCovidData.time.text !== latestRecordCovid.latestUpdate) {
+                    updateData = {
+                        total: latestRecordCovid.total + currentCovidData.data.total,
+                        latestUpdate: currentCovidData.time.text,
+                        details: __spreadArrays(latestRecordCovid.details, [currentCovidData]),
+                    };
+                    db_1.default
+                        .ref('covids/days/' + currentCovidData.time.date)
+                        .set(updateData, function (error) {
+                        if (error) {
+                            throw error;
+                        }
+                    });
+                }
+                _a.label = 7;
+            case 7: return [2 /*return*/, res.json({
+                    time: new Date(),
+                    status: 'called',
+                })];
+            case 8:
                 error_1 = _a.sent();
                 next(error_1);
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
+                return [3 /*break*/, 9];
+            case 9: return [2 /*return*/];
         }
     });
 }); };
 exports.crawlDetails = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var error_2;
+    var url, dimension, error_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, crawl_job_1.crawlDetail()];
+                _a.trys.push([0, 3, , 4]);
+                url = 'https://ncov.moh.gov.vn/web/guest/trang-chu';
+                return [4 /*yield*/, crawl_util_1.getAsyncCovidDetail(url)];
             case 1:
+                dimension = _a.sent();
+                // TODO: Overide all records in the firebase database realtime
+                return [4 /*yield*/, db_1.default
+                        .ref('covids/overviews/' + parse_util_1.parseCurrentTime())
+                        .set(dimension)];
+            case 2:
+                // TODO: Overide all records in the firebase database realtime
                 _a.sent();
                 return [2 /*return*/, res.json({
                         time: new Date(),
                         status: 'called',
                     })];
-            case 2:
+            case 3:
                 error_2 = _a.sent();
                 next(error_2);
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
         }
     });
 }); };
