@@ -57,15 +57,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var db_1 = __importDefault(require("../../configs/db"));
 var crawl_util_1 = require("../../utils/crawl.util");
 var parse_util_1 = require("../../utils/parse.util");
-var db_1 = __importDefault(require("../../configs/db"));
 exports.crawlPerDay = function () { return __awaiter(void 0, void 0, void 0, function () {
     var dimension, currentCovidData, latestRecordCovid, updateData, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 7, , 8]);
+                _a.trys.push([0, 8, , 9]);
                 return [4 /*yield*/, crawl_util_1.getAsyncCovidData('https://ncov.moh.gov.vn/web/guest/dong-thoi-gian')];
             case 1:
                 dimension = _a.sent();
@@ -76,7 +76,8 @@ exports.crawlPerDay = function () { return __awaiter(void 0, void 0, void 0, fun
             case 2: return [4 /*yield*/, (_a.sent()).val()];
             case 3:
                 latestRecordCovid = _a.sent();
-                if (!!latestRecordCovid) return [3 /*break*/, 5];
+                if (!!latestRecordCovid) return [3 /*break*/, 6];
+                if (!(parse_util_1.parseCurrentTime() == currentCovidData.time.date)) return [3 /*break*/, 5];
                 return [4 /*yield*/, db_1.default
                         .ref('covids/days/' + currentCovidData.time.date)
                         .set({
@@ -86,8 +87,9 @@ exports.crawlPerDay = function () { return __awaiter(void 0, void 0, void 0, fun
                     })];
             case 4:
                 _a.sent();
-                return [3 /*break*/, 6];
-            case 5:
+                _a.label = 5;
+            case 5: return [3 /*break*/, 7];
+            case 6:
                 // ? Update count
                 if (currentCovidData.time.text !== latestRecordCovid.latestUpdate) {
                     updateData = {
@@ -103,12 +105,12 @@ exports.crawlPerDay = function () { return __awaiter(void 0, void 0, void 0, fun
                         }
                     });
                 }
-                _a.label = 6;
-            case 6: return [2 /*return*/, true];
-            case 7:
+                _a.label = 7;
+            case 7: return [2 /*return*/, true];
+            case 8:
                 error_1 = _a.sent();
                 return [2 /*return*/, false];
-            case 8: return [2 /*return*/];
+            case 9: return [2 /*return*/];
         }
     });
 }); };

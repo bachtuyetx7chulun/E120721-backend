@@ -5,10 +5,6 @@ module.exports = {
             script: './app/index.js',
         },
         {
-            name: 'Covid-queue',
-            script: './app/bull/index.js',
-        },
-        {
             name: 'Covid-cron',
             script: './app/services/crawl.service.js',
         },
