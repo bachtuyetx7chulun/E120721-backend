@@ -30,7 +30,7 @@ export default class App {
     }
 
     public listen(): void {
-        this.app.listen(this.app.get('port'), () => {
+        this.app.listen(process.env.PORT || 5000, () => {
             console.log(`Server is running`);
         });
     }

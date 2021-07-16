@@ -30,10 +30,8 @@ var App = /** @class */ (function () {
         this.app.use(error_middleware_1.HandleError);
     };
     App.prototype.listen = function () {
-        var _this = this;
-        this.app.listen(this.app.get('port'), function () {
+        this.app.listen(process.env.PORT || 5000, function () {
             console.log("Server is running");
-            console.log("http://localhost:" + _this.app.get('port') + "/api/v1");
         });
     };
     return App;

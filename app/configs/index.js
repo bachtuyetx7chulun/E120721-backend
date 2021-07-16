@@ -9,5 +9,5 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var dotenv = __importStar(require("dotenv"));
 dotenv.config();
-exports.PORT = process.env.HOST_PORT || 4000;
+exports.PORT = process.env.PORT || 4000;
 exports.HOST_NAME = process.env.HOST_NAME || 'https://e120721.herokuapp.com/';
