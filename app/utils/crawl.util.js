@@ -46,7 +46,7 @@ var getAsyncCovidData = function (url) { return __awaiter(void 0, void 0, void 0
         switch (_a.label) {
             case 0: return [4 /*yield*/, puppeteer_1.default.launch({
                     headless: true,
-                    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+                    args: ['--no-sandbox'],
                 })];
             case 1:
                 browser = _a.sent();
@@ -81,7 +81,7 @@ var getAsyncCovidDetail = function (url) { return __awaiter(void 0, void 0, void
         switch (_a.label) {
             case 0: return [4 /*yield*/, puppeteer_1.default.launch({
                     headless: true,
-                    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+                    args: ['--no-sandbox'],
                 })];
             case 1:
                 browser = _a.sent();

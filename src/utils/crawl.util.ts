@@ -3,7 +3,7 @@ import puppeteer, { Page } from 'puppeteer';
 const getAsyncCovidData = async (url: string) => {
     const browser = await puppeteer.launch({
         headless: true,
-        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        args: ['--no-sandbox'],
     });
     const page = await browser.newPage();
     await page.goto(url, {
@@ -23,7 +23,7 @@ const getAsyncCovidData = async (url: string) => {
 const getAsyncCovidDetail = async (url: string) => {
     const browser = await puppeteer.launch({
         headless: true,
-        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        args: ['--no-sandbox'],
     });
     const page = await browser.newPage();
     await page.goto(url, {
